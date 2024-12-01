@@ -38,6 +38,11 @@ int main(int argc, char *argv[] ){
   }
   file.close();
   
+  //look at each number in the first column and
+  //find matches in the second; if it matches
+  //update the counter, multiply the number being checked
+  //by the counter and return the sum
+
   for(int i = 0; i < first_array.size(); ++i) {
     int similarity = 0;
     for (int j = 0; j < second_array.size(); ++j) {

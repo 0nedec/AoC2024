@@ -7,22 +7,34 @@
 
 using namespace std;
 
-char safe '-';
-char direction '-';
+char safe = '-';
+char direction =  '-';
+
+void dampner(vector<int> unsafeReport){
+	vector< vector <int> > subReports;
+	for (int ii = 0; ii < unsafeReport.size(); ++ii){
+		vector<int> reportCopy(unsafeReport);
+		reportCopy.erase(reportCopy.begin()+ii);
+		subReports.push_back(reportCopy);
+	}
+
+}
 
 
-void set-safety(int a, int b) {
+
+
+
+void check_safety(int a, int b) {
 	//find the difference
 	int diff = a - b;
 	int adj_level = abs(diff);
-
 	//check if ascending or descending difference has flipped. if so mark unsafe.
-	if ((diff < 0) && (direction !=  '-' || direction == 'd'){
+	if ((diff < 0) && direction == 'd'){
 		safe = 'u';
 		return;
 	}
-	else if ((diff > 0)	 && (direction != '-' || direction == 'a'){
-		safe = 'u'
+	else if ((diff > 0)	 && direction == 'a'){
+		safe = 'u';
 		return;
 	}
 	//check if no difference between two numbers. if so mark unsafe.
@@ -31,7 +43,7 @@ void set-safety(int a, int b) {
 		return;
 	}
 	//check if two adjajent levels are at least 1 and at most 3
-	else if (adj_level <1 && adj_level >3){
+	else if (adj_level <1 || adj_level >3){
 		safe = 'u';
 		return;
 	}
@@ -47,17 +59,6 @@ void set-safety(int a, int b) {
 
 
 
-/*
-
-bool is_descending(int a, int b) {
-	return ( a - b  > 0 );
-}
-
-bool is_ascending(int a, int b) {
-	return ( a - b < 0); 
-}
-*/
-
 int main(int argc, char *argv[]){
 	if (argc != 2){
 		cerr << "Usage: " << argv[0] << "<filename>" << endl;
@@ -67,6 +68,7 @@ int main(int argc, char *argv[]){
 	ifstream file(filename);
 	string line;
 	vector< vector<int> > lines;
+	vector <vector<int> > unsafe_reports;
 	int safe_counter = 0;		
   char prob_damp = 't';
 	
@@ -94,61 +96,34 @@ int main(int argc, char *argv[]){
 					if (kk == lines[ii].size()) {
 						break;
 					}
-/*					else if(is_descending(lines[ii][jj],lines[ii][kk]) && (direction == '0' || direction == 'd')) {
-						direction = 'd';
-						int diff= abs(lines[ii][jj]-lines[ii][kk]);
-						if (diff >= 1 && diff <= 3){
-							safe = 's';
-						}
-						else if(is_descending(lines[ii][jj],lines[ii][kk+1]) && (direction == '0' || direction == 'd') && prob_damp == 't') {
-							direction = 'd';
-							prob_damp = 'f';
-							int diff= abs(lines[ii][jj]-lines[ii][kk+1]);
-							if (diff >= 1 && diff <= 3){
-								safe = 's';
-							}
-							jj++;
+					else{
+						check_safety(lines[ii][jj],lines[ii][kk]);
+						if(safe == 's'){
+							continue;
 						}
 						else {
-							safe = 'u';
+							unsafe_reports.push_back(lines[ii]);
 							break;
 						}
-					}
-
-					else if (is_ascending(lines[ii][jj],lines[ii][kk]) && (direction == '0' || direction == 'a')) {
-						direction = 'a';
-						int diff= abs(lines[ii][jj]-lines[ii][kk]);
-						if (diff >= 1 && diff <= 3){
-							safe = 's';
-						}
-						else if(is_ascending(lines[ii][jj],lines[ii][kk+1]) && (direction == '0' || direction == 'a') && prob_damp == 't') {
-							direction = 'a';
-							prob_damp = 'f';
-							int diff= abs(lines[ii][jj]-lines[ii][kk+1]);
-							if (diff >= 1 && diff <= 3){
-								safe = 's';
-							}
-							jj++;
-						}
-						else {
-							safe = 'u';
-							break;
-						}
-					}
-					else if ((lines[ii][jj]-lines[ii][kk] == 0) || direction=='a' || direction == 'd') {
-						direction = 'E';
-						break;
 					}
 		}
 		cout << ii+1 << "\t" << safe << direction << endl;
 		if ((direction == 'd' || direction =='a') && safe == 's'){
 			safe_counter++;
 		}
-		direction = '0';
-		safe = 'u';
-		prob_damp = 't';
+		direction = '-';
+		safe = '-';
+		//prob_damp = 't';
 	}
-*/
-	cout << safe_counter;
+	cout << safe_counter << endl;
+	
+	cout << "Unsafe Reports:" << endl;
+	for (int ii=0; ii < unsafe_reports.size();++ii){
+		for (int jj=0; jj < unsafe_reports[ii].size(); ++jj) {
+			cout <<  unsafe_reports[ii][jj];
+			}
+		cout << endl;
+		}
+
 	return 0;
 }

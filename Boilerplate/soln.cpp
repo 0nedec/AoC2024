@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char *argv[]){
   if (argc != 2){
-    cerr << "Usage: " << argv[0] << "<filename>" << endl;
+    cerr << "Usage: " << argv[0] << " <filename>" << endl;
     return 1;
   }
   string filename = argv[1];

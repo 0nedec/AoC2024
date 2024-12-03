@@ -17,7 +17,7 @@ void dampner(vector<int> unsafeReport){
 		reportCopy.erase(reportCopy.begin()+ii);
 		subReports.push_back(reportCopy);
 	}
-
+return;
 }
 
 
@@ -57,7 +57,27 @@ void check_safety(int a, int b) {
 	return;
 }
 
-
+void checkLineForSafety(vector<int> line){
+	for (int jj = 0; jj < line.size(); ++jj){
+		kk = jj + 1;
+		if (kk == line.size()){
+			return;
+		}
+		else {
+			check_safety(line[jj], line[kk]);
+			if (safe == 's') {
+				continue;
+			}
+			else {
+				break;
+			}
+		}
+	}
+	cout << safe << direction << endl;
+	if((direction == 'd' || direction == 'a') &&  safe == 's') {
+		safe_counter++
+	}
+}
 
 int main(int argc, char *argv[]){
 	if (argc != 2){
@@ -90,7 +110,8 @@ int main(int argc, char *argv[]){
 	file.close();
 
 	for (int ii=0;ii < lines.size();++ii){
-		for(int jj = 0; jj < lines[ii].size(); ++jj){    
+		checkLineForSafety(lines[ii]);
+/*		for(int jj = 0; jj < lines[ii].size(); ++jj){
 			int kk = 0;
 					kk=jj+1;
 					if (kk == lines[ii].size()) {
@@ -111,6 +132,7 @@ int main(int argc, char *argv[]){
 		if ((direction == 'd' || direction =='a') && safe == 's'){
 			safe_counter++;
 		}
+*/
 		direction = '-';
 		safe = '-';
 		//prob_damp = 't';

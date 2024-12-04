@@ -9,18 +9,7 @@ using namespace std;
 
 char safe = '-';
 char direction =  '-';
-
-void dampner(vector<int> unsafeReport){
-	vector< vector <int> > subReports;
-	for (int ii = 0; ii < unsafeReport.size(); ++ii){
-		vector<int> reportCopy(unsafeReport);
-		reportCopy.erase(reportCopy.begin()+ii);
-		subReports.push_back(reportCopy);
-	}
-return;
-}
-
-
+int safe_counter = 0;
 
 
 
@@ -59,11 +48,17 @@ void check_safety(int a, int b) {
 
 void checkLineForSafety(vector<int> line){
 	for (int jj = 0; jj < line.size(); ++jj){
-		kk = jj + 1;
+		int kk = jj + 1;
 		if (kk == line.size()){
+			cout << safe << direction << endl;
+			if((direction == 'd' || direction == 'a') &&  safe == 's') {
+				safe_counter++;
+				cout << "safe counter updated to: " << safe_counter << endl;
+			}
 			return;
 		}
 		else {
+			cout << "Checking safety on " << line[jj] << " and " << line[kk] << endl;
 			check_safety(line[jj], line[kk]);
 			if (safe == 's') {
 				continue;
@@ -74,13 +69,42 @@ void checkLineForSafety(vector<int> line){
 		}
 	}
 	cout << safe << direction << endl;
-	if((direction == 'd' || direction == 'a') &&  safe == 's') {
-		safe_counter++
+}
+
+void dampner(vector<int> unsafeReport){
+	//create subReports to check each iteration of problem dampner
+	vector< vector <int> > subReports;
+	for (int ii = 0; ii < unsafeReport.size(); ++ii){
+		vector<int> reportCopy(unsafeReport);
+		reportCopy.erase(reportCopy.begin()+ii);
+		subReports.push_back(reportCopy);
 	}
+
+	for (const auto& row : subReports) {
+		for(int num : row) {
+			cout << num << " ";
+		}
+		cout << endl;
+	}
+	//iterate over each subreport
+	//if subreport is valid update report counter
+	//break out of chekcing subReports
+	for (int jj = 0; jj < subReports.size(); ++jj){
+		safe = '-';
+		direction =  '-'; 
+		checkLineForSafety(subReports[jj]);
+		if (safe == 's') {
+			return;
+		}
+		else {
+			continue;
+		}
+	}
+	return;
 }
 
 int main(int argc, char *argv[]){
-	if (argc != 2){
+	if (argc != 2) {
 		cerr << "Usage: " << argv[0] << "<filename>" << endl;
 		return 1;
 	}
@@ -89,8 +113,6 @@ int main(int argc, char *argv[]){
 	string line;
 	vector< vector<int> > lines;
 	vector <vector<int> > unsafe_reports;
-	int safe_counter = 0;		
-  char prob_damp = 't';
 	
 	if (!file.is_open()){
 		cerr << "Error opening file: " << filename << endl;
@@ -110,35 +132,18 @@ int main(int argc, char *argv[]){
 	file.close();
 
 	for (int ii=0;ii < lines.size();++ii){
+		cout << endl << "Checking line " << ii << endl;
 		checkLineForSafety(lines[ii]);
-/*		for(int jj = 0; jj < lines[ii].size(); ++jj){
-			int kk = 0;
-					kk=jj+1;
-					if (kk == lines[ii].size()) {
-						break;
-					}
-					else{
-						check_safety(lines[ii][jj],lines[ii][kk]);
-						if(safe == 's'){
-							continue;
-						}
-						else {
-							unsafe_reports.push_back(lines[ii]);
-							break;
-						}
-					}
+		if (safe == 'u') {
+			unsafe_reports.push_back(lines[ii]);
 		}
-		cout << ii+1 << "\t" << safe << direction << endl;
-		if ((direction == 'd' || direction =='a') && safe == 's'){
-			safe_counter++;
-		}
-*/
 		direction = '-';
 		safe = '-';
-		//prob_damp = 't';
 	}
 	cout << safe_counter << endl;
-	
+	cout <<  "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl;
+	cout << "Running dampner" << endl;
+/*
 	cout << "Unsafe Reports:" << endl;
 	for (int ii=0; ii < unsafe_reports.size();++ii){
 		for (int jj=0; jj < unsafe_reports[ii].size(); ++jj) {
@@ -146,6 +151,11 @@ int main(int argc, char *argv[]){
 			}
 		cout << endl;
 		}
-
+*/
+	for (int ii = 0; ii < unsafe_reports.size(); ++ii){
+		dampner(unsafe_reports[ii]);
+		safe = '-';
+	}
+	cout << safe_counter << endl;
 	return 0;
 }

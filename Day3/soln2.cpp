@@ -15,7 +15,17 @@ void printVector(vector<string> printable){
 	return;
 }
 
-
+void getValidMulFromLine(string line, vector<string>& muls){
+	regex firstRegex("^.*don\\'t\\(\\)");
+	smatch match;
+	string::const_iterator start = line.begin();
+	cout << "Starting search..." << endl;
+	while(regex_search(start, line.cend(), match, firstRegex)){
+	cout << "Match found: " << match.str() << endl;
+	start = match.suffix().first;
+	}
+	return;
+}
 void getMulFromLine(string line, vector<string>& muls){
 	regex mulRegex("mul\\(\\d{1,3},\\d{1,3}\\)");
 	smatch match;
@@ -65,7 +75,7 @@ int main(int argc, char *argv[]){
 
   while(getline(file, line)){
 		//do something
-		getMulFromLine(line, muls); 
+		getValidMulFromLine(line, muls); 
 	}
 	printVector(muls);
 	int sum = parseAndMultiplyMuls(muls);

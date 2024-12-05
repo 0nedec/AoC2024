@@ -16,7 +16,7 @@ void printVector(vector<string> printable){
 }
 
 void getValidMulFromLine(string line, vector<string>& muls){
-	regex firstRegex("^.*don\\'t\\(\\)");
+	regex firstRegex("(do\\(\\).*?don\\'t\\(\\))");
 	smatch match;
 	string::const_iterator start = line.begin();
 	cout << "Starting search..." << endl;

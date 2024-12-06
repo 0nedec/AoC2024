@@ -15,24 +15,24 @@ void printVector(vector<string> printable){
 	return;
 }
 
-void getValidMulFromLine(string line, vector<string>& muls){
-	regex firstRegex("(do\\(\\).*?don\\'t\\(\\))");
+void getDoThroughDontFromLine(string line, vector<string>& muls){
+	regex firstRegex("(do\\(\\).*?($|don\\'t\\(\\)))");
 	smatch match;
 	string::const_iterator start = line.begin();
-	cout << "Starting search..." << endl;
 	while(regex_search(start, line.cend(), match, firstRegex)){
-	cout << "Match found: " << match.str() << endl;
-	start = match.suffix().first;
+	  cout << "Do - don't Match found: " << match.str() << endl;
+	  muls.push_back(match.str());
+    start = match.suffix().first;
 	}
 	return;
 }
-void getMulFromLine(string line, vector<string>& muls){
-	regex mulRegex("mul\\(\\d{1,3},\\d{1,3}\\)");
+void getFirstMulFromLine(string line, vector<string>& muls){
+	regex mulRegex("(^.*?don\\'t\\(\\))");
 	smatch match;
 	string::const_iterator start = line.begin();
 	
 	while (regex_search(start, line.cend(), match, mulRegex)){
-		//cout << "Match found: " << match.str() << endl;
+		cout << "First Match found: " << match.str() << endl << endl;
 		muls.push_back(match.str());
 		start = match.suffix().first;
 	}
@@ -72,10 +72,17 @@ int main(int argc, char *argv[]){
     cerr << "Error opening file: " << filename << endl;
     return 1;
   }
-
+  if (getline(file, line)){
+    getFirstMulFromLine(line, muls);  
+    //printVector(muls);
+  }
+  else {
+    cout << "Error getting first line " << endl;
+  }
+  file.seekg(0);
   while(getline(file, line)){
 		//do something
-		getValidMulFromLine(line, muls); 
+		getDoThroughDontFromLine(line, muls); 
 	}
 	printVector(muls);
 	int sum = parseAndMultiplyMuls(muls);
